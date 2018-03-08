@@ -18,7 +18,7 @@ type User struct {
 
 var Persons []User
 
-func Friend(w http.ResponseWriter, r *http.Request) {
+func CreateFriend(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var friends [2]string
 	_ = json.NewDecoder(r.Body).Decode(&friends)
@@ -143,9 +143,11 @@ func RetrieveFriendsWillReceiveUpdates (w http.ResponseWriter, r *http.Request) 
 
 func main() {
 	router := mux.NewRouter()
-	router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
-	router.HandleFunc("/people/{id}", GetPersonEndpoint).Methods("GET")
-	router.HandleFunc("/people/{id}", CreatePersonEndpoint).Methods("POST")
-	router.HandleFunc("/people/{id}", DeletePersonEndpoint).Methods("DELETE")
+	router.HandleFunc("/CreateFriend", CreateFriendEndpoint).Methods("POST")
+	router.HandleFunc("/RetrieveFriendListById/{id}", RetrieveFriendListByIdpoint).Methods("GET")
+	router.HandleFunc("/RetrieveCommonFriendListById/{id}", RetrieveCommonFriendListByIdEndpoint).Methods("POST")
+	router.HandleFunc("/SubscribeUpdatesFromEmail/{id}", SubscribeUpdatesFromEmailEndpoint).Methods("POST")
+	router.HandleFunc("/BlockUpdates/{id}", BlockUpdatesEndpoint).Methods("POST")
+	router.HandleFunc("/RetrieveFriendsWillReceiveUpdates/{id}", RetrieveFriendsWillReceiveUpdatesEndpoint).Methods("POST")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }
