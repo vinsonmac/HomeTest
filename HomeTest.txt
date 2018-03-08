@@ -1,0 +1,151 @@
+package main
+
+import (
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+    "github.com/rs/xid"
+)
+
+type User struct {
+	ID        string `json:"id`
+    Email     string 'json:"email'
+    ReceiveUpdates bool 'json: receiveUpdates'
+    IsBlocked bool 'json: IsBlocked'
+    Friends   []User 'json: friends'
+}
+
+var Persons []User
+
+func Friend(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var friends [2]string
+	_ = json.NewDecoder(r.Body).Decode(&friends)
+	friends[1] = params["id1"]
+    friends[2] = params["id2"]
+
+    for i := 0; i < len(Persons); i++ {
+        if Persons.Id == "id1" {
+           var temp User;
+           temp.Id = xid.New()
+           temp.Email = id2
+           Persons.Friends.Append(temp)
+        }
+        if Persons.Id == "id2" {
+           var temp User;
+           temp.Id = xid.New()
+           temp.Email = id1
+           Persons.Friends.Append(temp)
+        }
+    }
+    var result map[string]string
+    result.Key = 'success'
+    result['success'] = true
+	json.NewEncoder(w).Encode(result)
+    return
+}
+
+
+func RetrieveFriendListById(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	for _, item := range Persons {
+        if item.ID == params["id"] {
+            json.NewEncoder(w).Encode(Persons.Friends)
+            return
+        }
+    }    
+}
+
+
+func RetrieveCommonFriendListById(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var friends [2]string
+	_ = json.NewDecoder(r.Body).Decode(&friends)
+	friends[1] = params["id1"]
+    friends[2] = params["id2"]
+
+    var friend1 User = Person[id1].Friends
+    var friend2 User = Person[id2].Friends
+
+    var commonFriend []string
+
+    for i := 0; i < len(friend1); i++ 
+    {
+       for j := 0; j < len(friend2); i++ 
+       {
+           if(friend1[i] == friend2[j]){
+               commonFriend.append(friend1)
+           }
+       }
+    }
+    var result map[string]string
+    result.append('success', true)
+    result.append('friends', commonFriend)
+    result.append('count', commonFriend.Count)
+	json.NewEncoder(w).Encode(result)
+    return
+}
+
+func SubscribeUpdatesFromEmail (w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var friends [2]string
+	_ = json.NewDecoder(r.Body).Decode(&friends)
+	friends[1] = params["id1"]
+    friends[2] = params["id2"]
+
+    Person[id1].Friends[id2].ReceiveUpdates = true;
+    
+   
+    var result map[string]string
+    result.append('success', true)
+	json.NewEncoder(w).Encode(result)
+    return
+}
+
+func BlockUpdates (w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var friends [2]string
+	_ = json.NewDecoder(r.Body).Decode(&friends)
+	friends[1] = params["id1"]
+    friends[2] = params["id2"]
+
+    Person[id1].Friends[id2].ReceiveUpdates = false;
+    
+   
+    var result map[string]string
+    result.append('success', true)
+	json.NewEncoder(w).Encode(result)
+    return
+}
+
+func RetrieveFriendsWillReceiveUpdates (w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	var friends [2]string
+	_ = json.NewDecoder(r.Body).Decode(&friends)
+	friends[1] = params["id"]
+    friends[2] = params["text"]
+
+    var result map[string]string
+    
+    for i := 0; i < len(Person[id].Friends[]); i++ 
+    {
+       if(Person[id].Friends[i].ReceiveUpdates == true && Person[id].Friends[i].IsBlocked == false){
+               result.append(Person[id].Friends[i])
+           }
+       }
+    }
+
+    result.append('success', true)
+	json.NewEncoder(w).Encode(result)
+    return
+}
+
+func main() {
+	router := mux.NewRouter()
+	router.HandleFunc("/people", GetPeopleEndpoint).Methods("GET")
+	router.HandleFunc("/people/{id}", GetPersonEndpoint).Methods("GET")
+	router.HandleFunc("/people/{id}", CreatePersonEndpoint).Methods("POST")
+	router.HandleFunc("/people/{id}", DeletePersonEndpoint).Methods("DELETE")
+	log.Fatal(http.ListenAndServe(":8000", router))
+}
